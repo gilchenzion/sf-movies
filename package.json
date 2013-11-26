@@ -1,0 +1,22 @@
+{
+  "name": "sf-movies",
+  "version": "0.0.0",
+  "description": "Map of movies being filmed in SF",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gilchenzion/sf-movies.git"
+  },
+  "keywords": [
+    "uber",
+    "sf",
+    "movies"
+  ],
+  "author": "Gil Chen-Zion",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "2c3d98b25e09b3098dadc191cf63480d6c4e0f60"
+}
