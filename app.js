@@ -28,8 +28,6 @@ if (app.get('env') === 'development') {
 app.get('/', routes.index);
 
 // API ROUTES
-app.post('/scrub', api.postXls);
-
 
 // START SERVER
 http.createServer(app).listen(app.get('port'), function () {
