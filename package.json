@@ -18,5 +18,9 @@
   "author": "Gil Chen-Zion",
   "license": "BSD",
   "readmeFilename": "README.md",
-  "gitHead": "2c3d98b25e09b3098dadc191cf63480d6c4e0f60"
+  "gitHead": "2c3d98b25e09b3098dadc191cf63480d6c4e0f60",
+  "dependencies": {
+    "express": "~3.4.4",
+    "ejs": "~0.8.5"
+  }
 }
