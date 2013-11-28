@@ -11,7 +11,6 @@
 		},
 
 		render: function() {
-
 			this.fitMap();
         	this.loadMap();
         	//this.el.bind('resize', this.fitMap);

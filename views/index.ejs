@@ -3,11 +3,21 @@
 <head>
 	<title>SF Film Search</title>
 	<link rel="stylesheet" href="css/site.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFDymhVQsVa69k08IMRjw14Crbt19rB4M&sensor=false"></script>
 </head>
 <body>
+	<div class="search-form">
+		<div class="input-group">
+      		<input type="text" class="auto-search form-control" placeholder="Search for Movie, Actors, Studios, etc...">
+      		<span class="input-group-btn">
+        		<button class="btn btn-primary" type="button">Search</button>
+      		</span>
+    	</div>
+	</div>
 	<div class="movie-map"></div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
     <script src="http://ajax.cdnjs.com/ajax/libs/underscore.js/1.1.6/underscore-min.js"></script>
     <script src="http://ajax.cdnjs.com/ajax/libs/backbone.js/0.3.3/backbone-min.js"></script>  
