@@ -1,7 +1,7 @@
 // Import dependencies
 var express = require('express'),
 routes = require('./routes'),
-// api = require('./routes/api'),
+api = require('./routes/api'),
 http = require('http'),
 path = require('path');
 
@@ -28,6 +28,7 @@ if (app.get('env') === 'development') {
 app.get('/', routes.index);
 
 // API ROUTES
+app.get('/api/movies', api.getMovies);
 
 // START SERVER
 http.createServer(app).listen(app.get('port'), function () {
