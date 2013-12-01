@@ -29,6 +29,7 @@ app.get('/', routes.index);
 
 // API ROUTES
 app.get('/api/movies', api.getMovies);
+app.post('/api/movies', api.saveMovie);
 
 // START SERVER
 http.createServer(app).listen(app.get('port'), function () {

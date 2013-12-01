@@ -18,3 +18,26 @@ body {
 	width: 300px;
 	z-index:1;
 }
+
+.ui-helper-hidden-accessible {
+	display: none;
+}
+
+input {
+	margin-bottom: 10px;
+}
+
+ul {
+	width: 100% !important;
+	position: inherit !important;
+	-webkit-padding-start: 0px;
+	margin: 5px;
+	max-height: 300px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.ui-menu-item {
+	list-style-type: none;
+	margin: 5px;
+}
