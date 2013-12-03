@@ -1,16 +1,6 @@
 var request = require('request');
 var mongoose = require('mongoose');
 
-var geocoderProvider = 'google';
-var httpAdapter = 'http';
-// optionnal
-var extra = {
-    apiKey: 'AIzaSyDfVAx3aepK5igjwuSRIksSIv1uNWPgbcA',
-    formatter: null
-};
-
-var geocoder = require('node-geocoder').getGeocoder(geocoderProvider, httpAdapter, extra);
-
 var mongourl = process.env.MONGOLAB_URI || 
   process.env.MONGOHQ_URL || 
   'mongodb://localhost/loc';
