@@ -10,8 +10,6 @@ var Locations = Backbone.Collection.extend({
 	url: '/api/movies'
 });
 
-var SearchView = Backbone.View.extend({});
-
 var MarkerView = Backbone.View.extend({
 	tagName: "li",
 	initialize: function(options) {
@@ -26,7 +24,7 @@ var MarkerView = Backbone.View.extend({
 
 		that.geocoder = new google.maps.Geocoder();
 		that.loc = that.model.get("locations");
-		//console.log(that.loc);
+		
 		if(that.loc != "") {
 			that.getLoc();
 		} else {
@@ -64,39 +62,30 @@ var MarkerView = Backbone.View.extend({
     		title: that.model.get("locations")
     	});
 
-    	that.infowindow = new google.maps.InfoWindow({
-    		content: that.model.get("title")
-    	});
-
-    	
-
-    	google.maps.event.addListener(that.marker, 'click', that.showinfo);
-    	//google.maps.event.addListener(that.marker, 'closeclick', that.close);
+		google.maps.event.addListener(that.marker, 'click', that.showinfo);
 	},
 
 	showinfo: function() {
-		that = this;
-		that.infowindow.open(that.map, that.marker);
-	},
+		//that.infowindow.open(that.map, that.marker);
+		var template = window.JST['movies/result']({ entry: this.model.attributes});
 
-	close: function() {
-		that = this;
-		that.infowindow.close(that.map, that.marker);
+		$('.search').css('padding', '10px');
+		$('.search').html(template);
 	}
-
 });
+
+
 
 var AppView = Backbone.View.extend({
 	el: $(window),
+
 	events: {
-		'resize': 'fitWindow',
-		'click button': 'search'
+		'resize': 'fitWindow'
 	},
 
 	initialize: function() {
 		_.bindAll(this, 'render', 'loadMap', 'fitWindow');
 		this.collection = new Locations();
-		this.render();
 	},
 
 	render: function() {
@@ -104,28 +93,33 @@ var AppView = Backbone.View.extend({
        	this.loadMap();
 	},
 
+	fitWindow: function() {
+		var h = this.el.height()
+		$('.movie-map').height(h);
+	},
+
 	loadMap: function() {
 		
 		var mapOptions = {
 			// taken from http://www.nationsonline.org/oneworld/map/google_map_San_Francisco.htm
-         		center: new google.maps.LatLng(37.59870580866572, -122.35850703613276),
-         		zoom: 10
+         		center: new google.maps.LatLng(37.7833, -122.4167),
+         		zoom: 12
        	};
-       	var map = new google.maps.Map($('.movie-map')[0], mapOptions);
-       	this.map = map;
+       	this.map = new google.maps.Map($('.movie-map')[0], mapOptions);
+    },
 
-       	var that = this;
-       	//
+    loadCollection: function(searchTitle) {
+    	var that = this;
        	this.collection.fetch({
        		success: function(res) {
-
-       			
        			var titles = {
        				"keys": []
        			};
        			for(var i = 0; i < res.length; i++) {
-       				var markerView = new MarkerView({ model: res.models[i], map: map});
+       				var markerView = new MarkerView({ model: res.models[i], map: that.map});
+
        				markers.push(markerView);
+
        				if(titles[res.models[i].attributes.title] == null) {
        					titles[res.models[i].attributes.title] = 1;
        					titles["keys"].push(res.models[i].attributes.title);
@@ -134,35 +128,91 @@ var AppView = Backbone.View.extend({
 
        			$( ".auto-search" ).autocomplete({
       				source: titles["keys"],
-      				appendTo: ".results"
+      				appendTo: ".results",
+      				select: function (event, ui) {
+      					$('.auto-search').val(ui.item.value);
+      					that.navSearch();
+      					return true;
+      				}
     			});
+
+    			if(searchTitle != null) { 
+    				that.search(searchTitle); 
+    			} else {
+    				that.search(null);
+    			}
        		}
        	});
+	},	
+
+	navSearch: function() {
+		window.location.href = "#search/" + $('.auto-search').val();
 	},
 
-	fitWindow: function() {
-		var h = this.el.height()
-		$('.movie-map').height(h);
-	},
+	search: function(value) {
+		$('.search').empty();
+		$('.search').css('padding', '0px');
 
-	search: function() {
-		var term = $('.auto-search').val();
+		var term = value;
+		var all = false;
+		if(value == null) { all = true; }
+		var selected = [];
 		for(var i = 0; i < markers.length; i++) {
 			if(markers[i].marker != null) {
-				console.log("hi");
-				if(markers[i].model.get("title") == term) {
+				if(markers[i].model.get("title") == term || all) {
 					markers[i].marker.setMap(this.map);
+					selected.push(markers[i]);
 				} else {
 					markers[i].marker.setMap(null);
 				}
-			}
-			
+			}	
 		}
+		this.zoom(selected);
+
+	},
+
+	zoom: function(select) {
+		if(select.length > 0) {
+			var bound = new google.maps.LatLngBounds();
+			for(var i = 0; i < select.length; i++) {
+				//console.log(markers[i].marker);
+				bound.extend(select[i].marker.getPosition());
+			}
+			this.map.fitBounds(bound);
+		}
+		
 	}
 });
 
-// Load App when DOM ready
-var appView = null;
-
+	var appView = null;
 	appView = new AppView();
+
+	var AppRouter = Backbone.Controller.extend({
+        routes: {
+        	"search/:title": "searchTitle",
+        	"": "renderPage"
+        },
+        initialize: function() {
+        	appView.render();
+        	
+        },
+
+        renderPage: function() {
+        	appView.loadCollection(null);
+        },
+
+        searchTitle: function(title) {
+        	appView.loadCollection(title);
+        }
+
+    });
+
+	// Load App when DOM ready
+	
+
+	
+
+	var app_router = new AppRouter();
+
+    Backbone.history.start();
 })(jQuery);
