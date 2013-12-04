@@ -25,10 +25,9 @@ var MarkerView = Backbone.View.extend({
 		that.geocoder = new google.maps.Geocoder();
 		that.loc = that.model.get("locations");
 		
+		
 		if(that.loc != "") {
 			that.getLoc();
-		} else {
-			//if Location is null :) :) :0
 		}
 	},
 
@@ -44,9 +43,6 @@ var MarkerView = Backbone.View.extend({
     			  	});
     			} else if(status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
     				setTimeout(function() { that.getLoc() }, (600 * 3));
-    			} else {
-    			  	console.log('Geocode was not successful for the following reason: ' + status);
-
     			}
        		});
 		} else {
@@ -101,7 +97,7 @@ var AppView = Backbone.View.extend({
 	loadMap: function() {
 		
 		var mapOptions = {
-			// taken from http://www.nationsonline.org/oneworld/map/google_map_San_Francisco.htm
+				// taken from Google: San Francisco, CA
          		center: new google.maps.LatLng(37.7833, -122.4167),
          		zoom: 12
        	};
@@ -117,8 +113,8 @@ var AppView = Backbone.View.extend({
        			};
        			for(var i = 0; i < res.length; i++) {
        				var markerView = new MarkerView({ model: res.models[i], map: that.map});
-
        				markers.push(markerView);
+
 
        				if(titles[res.models[i].attributes.title] == null) {
        					titles[res.models[i].attributes.title] = 1;
@@ -166,9 +162,10 @@ var AppView = Backbone.View.extend({
 					markers[i].marker.setMap(null);
 				}
 			}	
-		}
-		this.zoom(selected);
-
+		} 
+		if(value != null) {
+			this.zoom(selected);
+		}	
 	},
 
 	zoom: function(select) {
@@ -179,6 +176,13 @@ var AppView = Backbone.View.extend({
 				bound.extend(select[i].marker.getPosition());
 			}
 			this.map.fitBounds(bound);
+			if(select.length < 3) {
+				var z = this.map.getZoom();
+				this.map.setZoom(z - 2);
+			}			
+		} else {
+			$('.search').css('padding', '10px');
+			$('.search').html("<p>I'm Sorrry! The data does not provide a specific location for this movie...but rest assured, it was filmed in SF.</p>");
 		}
 		
 	}

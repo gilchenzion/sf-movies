@@ -36,7 +36,7 @@ body {
 ul {
 	-webkit-padding-start: 0px;
 	position: absolute !important;
-	top: -1px !important;
+	top: -5px !important;
 	width: 80% !important;
 	background: #FFF;
 	margin: 5px;
